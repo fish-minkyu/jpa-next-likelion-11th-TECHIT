@@ -1,6 +1,8 @@
 # MySQL
 
-- 2024.01.31 `11주차`
+- 2024.01.31 ~ 02.01 `11주차`
+- 01.31 상속으로 공통된 속성 최소화
+- 02.01
 
 `1월31일`은 MySQL에 대해 학습하였다.
 MySQL Workbench(MySQL Client)를 활용해서  
@@ -8,6 +10,10 @@ MySQL Workbench(MySQL Client)를 활용해서
 
 ## 스팩
 
+- Spring Boot 3.2.2
+- Spring Web
+- Lombok
+- Spring data Jpa
 
 ## Key Point
 
