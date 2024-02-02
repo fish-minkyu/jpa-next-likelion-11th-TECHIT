@@ -4,10 +4,7 @@ package com.example.jpanext.school.entity;
 // : Join Table에 컬럼을 추가해보자
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
@@ -21,15 +18,19 @@ public class AttendingLectures {
   private Long id;
 
   // 복합키 관계를 굳이 설정하지 않아도 Join Table을 만들 수 있다.
+  @Setter
   @ManyToOne
   @JoinColumn(name = "student_id")
   private Student student;
 
+  @Setter
   @ManyToOne
   @JoinColumn(name = "lecture_id")
   private Lecture lecture;
 
+  @Setter
   private Integer midTermScore;
+  @Setter
   private Integer finalScore;
 }
 

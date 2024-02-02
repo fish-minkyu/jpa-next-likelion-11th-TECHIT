@@ -25,6 +25,11 @@ public class Lecture {
   @Setter
   private Integer endTime;
 
+  @Setter
+  @ManyToOne
+  @JoinColumn(name = "instructor_id")
+  private Instructor instructor;
+
   // mappedBy
   // 1. 상세설정은 mappedBy가 가르키는 속성에 따른다.
   // 2. mappedBy를 안해주게 되면 경유하는 테이블이 2개 생긴다.
