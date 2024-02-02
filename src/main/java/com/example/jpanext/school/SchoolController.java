@@ -29,6 +29,36 @@ public class SchoolController {
   private final AttendingLectureRepo attendingLectureRepo;
   private final InstructorRepository instructorRepository;
 
+  @GetMapping("/test-query")
+  public String testQuery() {
+    log.info("JPQL Simple");
+    lectureRepository.findLecturesBeforeLunch().forEach(lecture ->
+      log.info("{}: {}", lecture.getName(), lecture.getStartTime()));
+
+    lectureRepository.findLecturesBeforeLunchNative().forEach(lecture ->
+      log.info("{}: {}", lecture.getName(), lecture.getStartTime()));
+
+
+    log.info("============= indexed parameters");
+    lectureRepository.findLecturesByTime(10, 13).forEach(lecture ->
+      log.info("{}: {} -> {}",
+        lecture.getName(),
+        lecture.getStartTime(),
+        lecture.getEndTime()
+        ));
+
+    log.info("================ named parameters");
+    lectureRepository.findLecturesByTimeNamed(10, 13).forEach(lecture ->
+      log.info("{}: {} -> {}",
+        lecture.getName(),
+        lecture.getStartTime(),
+        lecture.getEndTime()
+      ));
+
+    return "done";
+  }
+
+
   @GetMapping("/many-to-many")
   public String test() {
     Student alex = Student.builder()
