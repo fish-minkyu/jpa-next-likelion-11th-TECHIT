@@ -2,7 +2,7 @@
 
 - 2024.01.31 ~ 02.01 `11주차`
 - 01.31 상속으로 공통된 속성 최소화 (BaseEntity.java)
-- 02.01 Relations & @Query & Projection
+- 02.01 Relations & @Query & Modifying & Projection
 
 `1월31일`은 MySQL에 대해 학습하였다.
 MySQL Workbench(MySQL Client)를 활용해서  

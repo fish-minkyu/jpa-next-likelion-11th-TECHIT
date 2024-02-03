@@ -11,13 +11,18 @@ import com.example.jpanext.school.repo.InstructorRepository;
 import com.example.jpanext.school.repo.LectureRepository;
 import com.example.jpanext.school.repo.StudentRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -85,6 +90,13 @@ public class SchoolController {
         lecture.getEndTime()
         ));
 
+    lectureRepository.findLectureByTimeNative(10, 15).forEach(lecture ->
+      log.info("{}: {} -> {}",
+        lecture.getName(),
+        lecture.getStartTime(),
+        lecture.getEndTime()
+        ));
+
     log.info("================ named parameters");
     lectureRepository.findLecturesByTimeNamed(10, 13).forEach(lecture ->
       log.info("{}: {} -> {}",
@@ -92,6 +104,51 @@ public class SchoolController {
         lecture.getStartTime(),
         lecture.getEndTime()
       ));
+
+    lectureRepository.findByDayIn(Set.of("mon", "tue")).forEach(lecture ->
+      log.info("{}: {}",
+        lecture.getName(),
+        lecture.getStartTime(),
+        lecture.getEndTime()
+      ));
+
+    Page<Lecture> lecturePage
+      = lectureRepository.findAll(PageRequest.of(0, 10));
+
+    // Pageable
+    lecturePage = lectureRepository.findLecturesBeforeLunch(
+      PageRequest.of(0, 4));
+    lecturePage.stream().forEach(lecture ->
+      log.info("{}: {}", lecture.getName(), lecture.getStartTime()));
+
+    // Pageable - nativeQuery = true
+    lectureRepository.findLecturesBeforeLunchNative(
+      PageRequest.of(0, 4)).forEach(lecture ->
+      log.info("{}: {}", lecture.getId(), lecture.getStartTime())
+    );
+
+    // id 역순 정렬
+    lectureRepository.findLecturesBeforeLunch(
+    Sort.by(Sort.Direction.DESC, "id")).forEach(lecture ->
+      log.info("{}: {}", lecture.getId(), lecture.getStartTime()));
+
+    return "done";
+  }
+
+  @Transactional // 데이터 수정에 반드시 필요, 컨트롤러 위에도 넣을 수 있다.
+  @GetMapping("/test-modifying")
+  public String modifying() {
+    log.info("modifying");
+    // 강의 시간이 3시간 초과인 강의 리스트 출력
+    lectureRepository.toLongLectures().forEach(lecture ->
+      log.info("{}: {}",
+        lecture.getName(),
+        lecture.getEndTime() - lecture.getStartTime()));
+
+    // Update
+    lectureRepository.setLectureMaxHour3();
+    log.info("lectures over 3 hours: {}",
+      lectureRepository.toLongLectures().size());
 
     return "done";
   }
