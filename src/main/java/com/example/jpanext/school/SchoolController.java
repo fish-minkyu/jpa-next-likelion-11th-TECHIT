@@ -1,5 +1,7 @@
 package com.example.jpanext.school;
 
+import com.example.jpanext.school.dto.ILCountDto;
+import com.example.jpanext.school.dto.ILCountProjection;
 import com.example.jpanext.school.entity.AttendingLectures;
 import com.example.jpanext.school.entity.Instructor;
 import com.example.jpanext.school.entity.Lecture;
@@ -8,15 +10,13 @@ import com.example.jpanext.school.repo.AttendingLectureRepo;
 import com.example.jpanext.school.repo.InstructorRepository;
 import com.example.jpanext.school.repo.LectureRepository;
 import com.example.jpanext.school.repo.StudentRepository;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -28,6 +28,44 @@ public class SchoolController {
   private final LectureRepository lectureRepository;
   private final AttendingLectureRepo attendingLectureRepo;
   private final InstructorRepository instructorRepository;
+
+  @GetMapping("test-agg")
+  public String testAggregate() {
+    // List는 테이블 전체 행들을 나타내고
+    // Object[]는 행들을 나타내고 있다.
+    List<Object[]> results =
+      instructorRepository.selectILCountObject();
+
+    // List<Object[]>
+    for (Object[] row: results) {
+      Instructor instructor = (Instructor) row[0];
+      // log.info(String.valueOf(row[1].getClass())); // Long
+      Long count = (Long) row[1];
+
+      log.info("{}: {}", instructor.getName(), count);
+    }
+
+    // 반환타입을 Dto로 바꿔주기
+    List<ILCountDto> resultDtos =
+      instructorRepository.selectILCountDto();
+
+    for (ILCountDto dto : resultDtos) {
+      log.info("{}: {}",
+        dto.getInstructor().getName(),
+        dto.getCount());
+    }
+
+    // 반환타입을 Projection으로 바꿔주기
+    List<ILCountProjection> resultProjs =
+      instructorRepository.selectILCountProj();
+    for (ILCountProjection projection: resultProjs) {
+      log.info("{}: {}",
+        projection.getInstructor(),
+        projection.getLectureCount());
+    }
+
+    return "done";
+  }
 
   @GetMapping("/test-query")
   public String testQuery() {
@@ -57,7 +95,6 @@ public class SchoolController {
 
     return "done";
   }
-
 
   @GetMapping("/many-to-many")
   public String test() {
