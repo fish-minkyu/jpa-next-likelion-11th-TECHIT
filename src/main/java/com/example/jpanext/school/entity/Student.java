@@ -52,7 +52,7 @@ public class Student {
   // (NullPointerException 방지)
   private final List<Lecture> attending = new ArrayList<>();
 
-  // way2. Join Table, Attending Lectures 레코 가져오기 위해 설정
+  // way2. Join Table, Attending Lectures 레코드 가져오기 위해 설정
   @OneToMany(mappedBy = "student")
   private final List<AttendingLectures> attendingLectures = new ArrayList<>();
 
