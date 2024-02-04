@@ -1,6 +1,6 @@
 # MySQL
 
-- 2024.01.31 ~ 02.01 `11주차`
+- 2024.01.31 ~ 02.02 `11주차`
 - 01.31 상속으로 공통된 속성 최소화 (BaseEntity.java)
 - 02.01 Relations & @Query & Modifying & Projection
 - 02.02 2월 1일 복습
