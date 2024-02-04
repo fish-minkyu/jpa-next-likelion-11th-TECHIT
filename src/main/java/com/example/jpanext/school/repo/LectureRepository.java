@@ -72,7 +72,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Param("days")Collection<String> days
     );
 
-  // Pageable (1/18일자 교안 참고)
+  // Pagination (1/18일자 교안 참고)
   // => Page를 받도록 정의할 수 있다.
   @Query("SELECT l FROM Lecture l WHERE l.startTime < 12")
   Page<Lecture> findLecturesBeforeLunch(Pageable pageable);
@@ -80,12 +80,15 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
   // nativeQuery = true
   @Query(
     value = "SELECT * FROM lecture WHERE start_time < 12",
-    countQuery = "SELECT COUNT(*) FROM  lecture WHERE start_time < 12", // 총 페이지가 몇개의 결과가 나오는지가 필요하다.
+    // 총 페이지가 몇개의 결과가 나오는지가 필요하다.
+    countQuery = "SELECT COUNT(*) FROM lecture WHERE start_time < 12",
     nativeQuery = true
   )
   Page<Lecture> findLecturesBeforeLunchNative(Pageable pageable);
 
   // Sort
+  // : nativeQuery가 true인 경우, 쓸 수 없다.
+  // 단, Pageable에선 사용이 가능하다.
   @Query("SELECT l FROM Lecture l WHERE l.startTime < 12")
   List<Lecture> findLecturesBeforeLunch(Sort sort);
 
@@ -104,6 +107,20 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     "SET l.endTime = l.startTime + 3 " +
     "WHERE l.endTime - l.startTime > 3")
   Integer setLectureMaxHour3();
+
+  // 지도학생을 데리고 있지 않은 강사를 삭제
+  @Modifying
+  @Query("DELETE FROM Instructor i " +
+    // size()는 JPQL이 제공하는 기능
+    "WHERE size(i.advisingStudents) = 0 ")
+  Integer sackInstructorNotAdvising();
+
+  // 강의를 하고 있지 않은 강사를 삭제
+  @Modifying
+  @Query("DELETE FROM Instructor i " +
+    "WHERE i.id NOT  IN " +
+    "(SELECT DISTINCT l.instructor.id FROM Lecture l)")
+  Integer sackInstructorsNotTeaching();
 
   // INSERT는 JPQL로 할 수 없다..
   // INSERT할 일이 있다면 그냥 save()를 쓰는 걸 추천..

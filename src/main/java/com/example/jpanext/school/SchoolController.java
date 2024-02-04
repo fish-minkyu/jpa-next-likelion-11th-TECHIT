@@ -150,6 +150,19 @@ public class SchoolController {
     log.info("lectures over 3 hours: {}",
       lectureRepository.toLongLectures().size());
 
+    // 지도교수가 없는 학생들 조회
+    studentRepository.noAdvisorStudent().forEach(student ->
+      log.info("{}, {}",student.getId(), student.getName()));
+
+    // 지도교수가 없는 학생들을에게 지도교수 배정
+    Instructor instructor = instructorRepository.findById(1L).get();
+    log.info("rows affected: {}",
+      studentRepository.setAdvisorForStudent(instructor));
+
+    // 잘 배정이 되었는지 확인하기 위해 재조회
+    studentRepository.noAdvisorStudent().forEach(student ->
+      log.info("{}, {}",student.getId(), student.getName()));
+
     return "done";
   }
 
