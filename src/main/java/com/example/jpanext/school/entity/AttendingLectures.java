@@ -28,6 +28,7 @@ public class AttendingLectures {
   @JoinColumn(name = "lecture_id")
   private Lecture lecture;
 
+  // Join Table에 컬럼 추가
   @Setter
   private Integer midTermScore;
   @Setter

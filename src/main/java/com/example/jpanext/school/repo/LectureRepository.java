@@ -1,5 +1,6 @@
 package com.example.jpanext.school.repo;
 
+import com.example.jpanext.school.dto.LectureStudentCount;
 import com.example.jpanext.school.entity.Instructor;
 import com.example.jpanext.school.entity.Lecture;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -137,5 +138,16 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Param("instructorId") Long instructorId,
     @Param("day") String day
   );
+
+  // JPQL Object 쿼리 만드는데 성공했으면 Dto와 Projection을 만들어보자.
+
+  // 강의 Lecture의 해당 Lecture를 듣는 학생 수의 리스트
+  @Query("SELECT l, SIZE(l.students) FROM Lecture l")
+  List<Object[]> selectWithStudentCount1();
+
+  // Projection
+  @Query("SELECT l AS lecture, SIZE(l.students) AS studentCount " +
+    "FROM Lecture l")
+  List<LectureStudentCount> selectWithStudentCount2();
 }
 

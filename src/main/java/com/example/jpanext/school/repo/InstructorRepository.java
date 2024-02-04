@@ -19,11 +19,14 @@ public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
   List<Object[]> selectILCountObject();
 
   // 반환타입을 Dto로 바꿔주기
+  // Dto가 import가 안되는 가능성이 있기 때문에 Dto를 명확히 표시해줘야 한다.
+  // Ex. com.example.jpanext.school.dto.ILCountDto()
   @Query("SELECT new com.example.jpanext.school.dto.ILCountDto(l.instructor, COUNT(*)) " +
     "FROM Lecture l " +
     "GROUP BY l.instructor")
   List<ILCountDto> selectILCountDto();
 
+  // Projection
   // 반환타입을 Projection으로 바꿔주기
   @Query("SELECT l.instructor AS instructor, COUNT(*) AS lectureCount " +
     "FROM Lecture l " +

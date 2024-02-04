@@ -28,4 +28,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   Integer setAdvisorForStudent(
     @Param("advisor") Instructor instructor
   );
+
+  // 예시로 한번 만들어 봄
+  @Query("SELECT s FROM Student s WHERE s.advisor = :advisor")
+  List<Student> findByAdvisor(
+    @Param("advisor") Instructor instructor);
 }

@@ -69,6 +69,17 @@ public class SchoolController {
         projection.getLectureCount());
     }
 
+    lectureRepository.selectWithStudentCount1()
+      .forEach(objects ->
+        log.info("{}: {}", objects));
+
+    lectureRepository.selectWithStudentCount2()
+      .forEach(projection ->
+        log.info("{}: {}",
+          projection.getLecture().getName(),
+          projection.getStudentCount()
+          ));
+
     return "done";
   }
 

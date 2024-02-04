@@ -4,6 +4,8 @@ import com.example.jpanext.school.entity.Instructor;
 
 public interface ILCountProjection {
   /*
+  인터페이스의 구현체가 반환하는 데이터를 가지고 있다고 생각하고
+  Getter 메소드를 만들어서 사용한다.
   private Instructor instructor;
   private Long lectureCount
   */
