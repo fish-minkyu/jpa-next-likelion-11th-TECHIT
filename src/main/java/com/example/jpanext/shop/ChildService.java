@@ -20,10 +20,8 @@ public class ChildService {
   @Transactional(propagation = Propagation.SUPPORTS)
   public void supports() {
     customerRepository.save(Customer.builder()
-      .name("Child Supports")
-      .build());
-
-    throw new RuntimeException("child throws");
+      .name("Child Supports").build());
+    throw new RuntimeException("child throw");
   }
 
   // 나(mandatory 메소드)를 호출한 메서드가 트랜잭션이어야 한다.
@@ -31,9 +29,7 @@ public class ChildService {
   @Transactional(propagation = Propagation.MANDATORY)
   public void mandatory() {
     customerRepository.save(Customer.builder()
-      .name("Child Mandatory")
-      .build());
-
-    throw new RuntimeException("child throws");
+      .name("Child Mandatory").build());
+    throw new RuntimeException("child throw");
   }
 }
