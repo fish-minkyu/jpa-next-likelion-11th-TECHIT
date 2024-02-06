@@ -34,6 +34,7 @@ class JpaNextApplicationTests {
 	@Autowired
 	private ItemRepository itemRepository;
 
+	// 낙관적 락 테스트 코드
 	@Test
 	public void optimisticLock() throws InterruptedException {
 		// given
@@ -70,6 +71,47 @@ class JpaNextApplicationTests {
 		assertTrue(result instanceof OptimisticLockingFailureException);
 		Item item = itemRepository.findById(1L).get();
 		assertEquals(15, item.getStock());
+	}
+
+	// 비관적 락 - sharedLock & exclusiveLock
+	@Test
+	public void pessimisticLock() throws InterruptedException {
+		// given
+		itemRepository.save(Item.builder()
+			.stock(55).build());
+
+		// when
+		// 몇번의 동시 요청이 있을 것인지
+		int threads = 5;
+		// 멀티 쓰레드를 실행하기 위한 실행자
+		ExecutorService executorService
+			= Executors.newFixedThreadPool(threads);
+
+		// 결과를 담기위한 리스트
+		List<Future<?>> futures = new ArrayList<>();
+		for (int i = 0; i < threads; i++) {
+			// 여러개의 요청을 보낼 준비
+			futures.add(executorService.submit(
+//				() -> shopService.decreaseStockShare()
+			  // () -> shopService.decreaseStockUpdate()
+			() -> shopService.decreaseStockOver()
+			));
+		}
+
+		// then
+		Exception result = new Exception();
+
+		try {
+			for (Future<?> future: futures)
+				future.get();
+		} catch (ExecutionException e) {
+			result = (Exception) e.getCause();
+		}
+
+		System.out.println(result.getClass());
+//		assertTrue(result instanceof OptimisticLockingFailureException);
+		Item item = itemRepository.findById(1L).get();
+		assertEquals(5, item.getStock());
 	}
 
 }

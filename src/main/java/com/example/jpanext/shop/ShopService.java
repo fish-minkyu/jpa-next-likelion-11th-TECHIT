@@ -74,6 +74,7 @@ public class ShopService {
       .forEach(item -> item.setStock(100));
   }
 
+  // 낙관적 락
   @Transactional
   public void decreaseStockOpt() {
     Item item = itemRepository.findById(1L)
@@ -81,6 +82,30 @@ public class ShopService {
 
     item.setStock(item.getStock() - 10);
     // 명백하게 수정 후 저장한다고 표현해주기
+    itemRepository.save(item);
+  }
+
+  // sharedLock
+  @Transactional
+  public void decreaseStockShare() {
+    Item item = itemRepository.findItemForShare(1L).orElseThrow();
+    item.setStock(item.getStock() - 10);
+    itemRepository.save(item);
+  }
+
+  // ExclusiveLock
+  @Transactional
+  public void decreaseStockUpdate() {
+    Item item = itemRepository.findItemForUpdate(1L).orElseThrow();
+    item.setStock(item.getStock() - 10);
+    itemRepository.save(item);
+  }
+
+  // Override
+  @Transactional
+  public void decreaseStockOver() {
+    Item item = itemRepository.findById(1L).orElseThrow();
+    item.setStock(item.getStock() - 10);
     itemRepository.save(item);
   }
 }
