@@ -109,20 +109,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     "WHERE l.endTime - l.startTime > 3")
   Integer setLectureMaxHour3();
 
-  // 지도학생을 데리고 있지 않은 강사를 삭제
-  @Modifying
-  @Query("DELETE FROM Instructor i " +
-    // size()는 JPQL이 제공하는 기능
-    "WHERE size(i.advisingStudents) = 0 ")
-  Integer sackInstructorNotAdvising();
-
-  // 강의를 하고 있지 않은 강사를 삭제
-  @Modifying
-  @Query("DELETE FROM Instructor i " +
-    "WHERE i.id NOT  IN " +
-    "(SELECT DISTINCT l.instructor.id FROM Lecture l)")
-  Integer sackInstructorsNotTeaching();
-
   // INSERT는 JPQL로 할 수 없다..
   // INSERT할 일이 있다면 그냥 save()를 쓰는 걸 추천..
   @Modifying

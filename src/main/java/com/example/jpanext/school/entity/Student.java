@@ -34,7 +34,7 @@ public class Student {
   private String email;
 
   @Setter
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "advisor_id") // 컬럼 이름이 똑같이 나와도 명시적으로 표현해주기 위해 사용
   private Instructor advisor;
 
@@ -53,7 +53,7 @@ public class Student {
   private final List<Lecture> attending = new ArrayList<>();
 
   // way2. Join Table, Attending Lectures 레코드 가져오기 위해 설정
-  @OneToMany(mappedBy = "student")
+  @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
   private final List<AttendingLectures> attendingLectures = new ArrayList<>();
 
     // 복수 관계 설정

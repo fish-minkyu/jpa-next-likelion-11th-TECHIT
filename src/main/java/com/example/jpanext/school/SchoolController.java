@@ -34,27 +34,74 @@ public class SchoolController {
   private final AttendingLectureRepo attendingLectureRepo;
   private final InstructorRepository instructorRepository;
 
-  // N + 1 강의 코드
-  @GetMapping("/simple-find")
-  public String simpleFind() {
-//    studentRepository.findAll();
-//    List<Instructor> instructors = instructorRepository.findAll();
-//    for (Instructor instructor: instructors) {
-//      // PersistentBag
-//      log.info("{}", instructor.getAdvisingStudents().getClass());
-//    }
-//
-//    List<Student> students = studentRepository.findAll();
-//    for (Student student: students) {
-//      if (student.getAdvisor() != null) {
-//        log.info("{}", student.getAdvisor().getClass());
-//      }
-//    }
-
-    instructorRepository.findAll();
-    studentRepository.findAll();
+  @GetMapping("/entity-graph")
+  public String entityGraph() {
+    List<Instructor> instructors = instructorRepository.findByEntityGraph();
+    for (Instructor instructor: instructors) {
+      log.info("{}", instructor.getAdvisingStudents().size());
+    }
 
     return "done";
+  }
+
+  // Fetch-join
+  // : 데이터를 한번에 가지고 오고 데이터를 추가로 로딩을 할 필요가 없다.
+  @GetMapping("/fetch-join")
+  public String fetchJoin() {
+    List<Student> students = studentRepository.findAllFetchAdvisor();
+
+    // Fetch Join으로 데이터를 한꺼번에 조회 (즉, DB에 한번 조회가 되었다.)
+    for (Student student: students) {
+      student.getAdvisor().getName();
+    }
+
+    List<Instructor> instructors = instructorRepository.findAllFetchStudents();
+
+    for (Instructor instructor: instructors) {
+      instructor.getAdvisingStudents().size();
+    }
+
+
+    return "done";
+  }
+
+  // Join해서 가져오기
+  @GetMapping("/join")
+  public String join() {
+    log.info("{}", studentRepository.findAllJoin().size());
+    log.info("{}", studentRepository.findAllLeftJoin().size());
+    log.info("{}", studentRepository.findAllRightJoin().size());
+    log.info("{}", studentRepository.findByAdvisorName("Plato Best"));
+
+    // jPQL join을 했지만 N + 1로 조회가 됨
+//    for (Student student: studentRepository.findAllJoin()) {
+//      student.getAdvisor().getName();
+//    }
+
+    return "done";
+  }
+
+  // N + 1 강의 코드
+  @GetMapping("/fetch-type")
+    public String fetchType() {
+//        List<Instructor> instructors = instructorRepository.findAll();
+//        for (Instructor instructor: instructors) {
+//            // PersistentBag
+//            log.info("{}", instructor.getAdvisingStudents().getClass());
+//        }
+//      List<Student> students = studentRepository.findAll();
+//      for (Student student: students) {
+//        if (student.getAdvisor() != null) {
+//          log.info("{}", student.getAdvisor().getClass());
+//          log.info("{}", student.getAdvisor().getId());
+//        }
+//      }
+
+      // SELECT t FROM T t;
+      instructorRepository.findAll();
+      studentRepository.findAll();
+
+      return "done";
   }
 
   @GetMapping("test-agg")

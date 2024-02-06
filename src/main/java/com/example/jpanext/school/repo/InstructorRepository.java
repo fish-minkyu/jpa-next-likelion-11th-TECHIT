@@ -3,12 +3,42 @@ package com.example.jpanext.school.repo;
 import com.example.jpanext.school.dto.ILCountDto;
 import com.example.jpanext.school.dto.ILCountProjection;
 import com.example.jpanext.school.entity.Instructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
+
+  // 데이터를 한번에 가지고 오고 데이터를 추가로 로딩을 할 필요가 없다.
+  // 또한, 지정된 속성을 EAGER로 조회
+  @EntityGraph(
+    attributePaths = {"advisingStudents"},
+    type = EntityGraph.EntityGraphType.FETCH
+  )
+  @Query("SELECT DISTINCT i FROM Instructor i")
+  List<Instructor> findByEntityGraph();
+
+
+  // 데이터를 한번에 가지고 오고 데이터를 추가로 로딩을 할 필요가 없다.
+  @Query("SELECT DISTINCT i FROM Instructor i LEFT JOIN FETCH i.advisingStudents")
+  List<Instructor> findAllFetchStudents();
+
+  // 지도학생을 데리고 있지 않은 강사를 삭제
+  @Modifying
+  @Query("DELETE FROM Instructor i " +
+    // size()는 JPQL이 제공하는 기능
+    "WHERE size(i.advisingStudents) = 0 ")
+  Integer sackInstructorNotAdvising();
+
+  // 강의를 하고 있지 않은 강사를 삭제
+  @Modifying
+  @Query("DELETE FROM Instructor i " +
+    "WHERE i.id NOT  IN " +
+    "(SELECT DISTINCT l.instructor.id FROM Lecture l)")
+  Integer sackInstructorsNotTeaching();
 
   // Instructor가 가지고 있는 Lecture을 세보자.
   // 아무 준비 없이 집계함수를 쓴다면 List<Object[]>으로 반환한다.
