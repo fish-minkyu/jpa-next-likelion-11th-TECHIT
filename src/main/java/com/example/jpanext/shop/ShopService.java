@@ -54,4 +54,23 @@ public class ShopService {
       itemRepository.save(item);
     } else throw new IllegalStateException();
   }
+
+  // 영속성 컨텍스트 1차 캐시 테스트 코드
+  @Transactional
+  public void testIdentity() {
+    Item item = Item.builder().build();
+    Long id = itemRepository.save(item).getId();
+
+    Item a = itemRepository.findById(id).get();
+    Item b = itemRepository.findById(id).get();
+
+    log.info("is same object: {}", a == b);
+  }
+
+  // 영속성 컨텍스트 변경 감지 테스트 코드
+  @Transactional
+  public void testDirtyChecking() {
+    itemRepository.findAll().stream()
+      .forEach(item -> item.setStock(100));
+  }
 }
