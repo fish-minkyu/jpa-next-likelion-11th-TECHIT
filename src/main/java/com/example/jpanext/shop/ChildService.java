@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChildService {
   private final CustomerRepository customerRepository;
 
-
   // 나(supports 메소드)를 호출한 메서드가 트랜잭션이면 그 일부로 실행되고,
   // 아니라면 트랜잭션 없이 실행된다.
   @Transactional(propagation = Propagation.SUPPORTS)
