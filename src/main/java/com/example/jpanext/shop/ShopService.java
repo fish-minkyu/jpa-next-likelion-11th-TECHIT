@@ -73,4 +73,14 @@ public class ShopService {
     itemRepository.findAll().stream()
       .forEach(item -> item.setStock(100));
   }
+
+  @Transactional
+  public void decreaseStockOpt() {
+    Item item = itemRepository.findById(1L)
+      .orElseThrow();
+
+    item.setStock(item.getStock() - 10);
+    // 명백하게 수정 후 저장한다고 표현해주기
+    itemRepository.save(item);
+  }
 }
