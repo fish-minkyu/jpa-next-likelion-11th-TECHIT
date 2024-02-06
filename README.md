@@ -4,6 +4,7 @@
 - 01.31 상속으로 공통된 속성 최소화 (BaseEntity.java)
 - 02.01 Relations & @Query & Modifying & Projection (school)
 - 02.02 2월 1일 복습 & Transaction (shop)
+- 02.05 낙관적 락, 비관적 락 & N + 1
 
 `1월31일`은 MySQL에 대해 학습하였다.
 MySQL Workbench(MySQL Client)를 활용해서  

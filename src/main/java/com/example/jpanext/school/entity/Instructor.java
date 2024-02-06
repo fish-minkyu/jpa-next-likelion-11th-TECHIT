@@ -19,7 +19,7 @@ public class Instructor {
   private String name;
 
   // cascade
-  // : 영속성 전이, 내가 영속회되었다는 것을밑에 관계를 맺고 있는 Entity에게 전파할 것인가?
+  // : 영속성 전이, 내가 영속회되었다는 것을 밑에 관계를 맺고 있는 Entity에게 전파할 것인가?
   // CascadeType.PERSIST
   // : 내가 저장이 될 때, 나한테 관계가 되어있는 애들도 다 저장을 시키겠다.
   // CascadeType.REMOVE

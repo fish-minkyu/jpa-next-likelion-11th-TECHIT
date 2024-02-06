@@ -34,6 +34,29 @@ public class SchoolController {
   private final AttendingLectureRepo attendingLectureRepo;
   private final InstructorRepository instructorRepository;
 
+  // N + 1 강의 코드
+  @GetMapping("/simple-find")
+  public String simpleFind() {
+//    studentRepository.findAll();
+//    List<Instructor> instructors = instructorRepository.findAll();
+//    for (Instructor instructor: instructors) {
+//      // PersistentBag
+//      log.info("{}", instructor.getAdvisingStudents().getClass());
+//    }
+//
+//    List<Student> students = studentRepository.findAll();
+//    for (Student student: students) {
+//      if (student.getAdvisor() != null) {
+//        log.info("{}", student.getAdvisor().getClass());
+//      }
+//    }
+
+    instructorRepository.findAll();
+    studentRepository.findAll();
+
+    return "done";
+  }
+
   @GetMapping("test-agg")
   public String testAggregate() {
     // List는 테이블 전체 행들을 나타내고

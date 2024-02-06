@@ -33,4 +33,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   @Query("SELECT s FROM Student s WHERE s.advisor = :advisor")
   List<Student> findByAdvisor(
     @Param("advisor") Instructor instructor);
+
+  @Query("SELECT s FROM Student s")
+  List<Student> findAllCustom();
 }
