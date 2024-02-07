@@ -39,7 +39,7 @@ public class Student {
   private Instructor advisor;
 
   // way1. ManyToMany 설정
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   // Join Table의 모습을 정의하고 싶을 (관계의 주가 되는 컬럼이 JoinTable을 쓴다.)
   @JoinTable(
     name = "attending_lectures",

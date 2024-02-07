@@ -19,12 +19,12 @@ public class AttendingLectures {
 
   // 복합키 관계를 굳이 설정하지 않아도 Join Table을 만들 수 있다.
   @Setter
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "student_id")
   private Student student;
 
   @Setter
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "lecture_id")
   private Lecture lecture;
 

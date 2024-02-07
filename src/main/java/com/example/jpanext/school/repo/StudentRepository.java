@@ -46,10 +46,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   @Query("SELECT s FROM Student s RIGHT JOIN s.advisor")
   List<Student> findAllRightJoin();
 
+  // JPQL Join
   @Query("SELECT s FROM Student s JOIN s.advisor WHERE s.advisor.name = :name")
   List<Student> findByAdvisorName(@Param("name") String name);
 
-  // Fetch Join
+  // JPQL Fetch Join
   @Query("SELECT s FROM Student s JOIN FETCH s.advisor")
   List<Student> findAllFetchAdvisor();
 }

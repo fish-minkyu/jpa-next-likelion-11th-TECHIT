@@ -26,6 +26,9 @@ public class Instructor {
   // : 내가 삭제가 될 때, 나한테 연관이 되어있는 애들이 먼저 삭제 후 나를 삭제 시키겠다.
   // CascadeType.ALL
   // : CascadeType.PERSIST + CascadeType.REMOVE
-  @OneToMany(mappedBy = "advisor", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "advisor",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private final List<Student> advisingStudents = new ArrayList<>();
+
+  @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY)
+  private final List<Lecture> lectures = new ArrayList<>();
 }

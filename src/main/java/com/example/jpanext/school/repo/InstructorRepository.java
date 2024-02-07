@@ -12,6 +12,13 @@ import java.util.List;
 
 public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
 
+  @EntityGraph(
+    attributePaths = {"advisingStudents", "lectures"},
+    type = EntityGraph.EntityGraphType.FETCH
+  )
+  @Query("SELECT DISTINCT i FROM Instructor i")
+  List<Instructor> findWithStudentAndLecture();
+
   // 데이터를 한번에 가지고 오고 데이터를 추가로 로딩을 할 필요가 없다.
   // 또한, 지정된 속성을 EAGER로 조회
   @EntityGraph(

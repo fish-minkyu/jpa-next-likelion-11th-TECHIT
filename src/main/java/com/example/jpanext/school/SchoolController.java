@@ -36,9 +36,14 @@ public class SchoolController {
 
   @GetMapping("/entity-graph")
   public String entityGraph() {
-    List<Instructor> instructors = instructorRepository.findByEntityGraph();
+    // Error, MultipleBagFetchException
+    List<Instructor> instructors
+      = instructorRepository.findWithStudentAndLecture();
+
+//    List<Instructor> instructors = instructorRepository.findByEntityGraph();
     for (Instructor instructor: instructors) {
       log.info("{}", instructor.getAdvisingStudents().size());
+      log.info("{}", instructor.getLectures().size());
     }
 
     return "done";
@@ -89,13 +94,13 @@ public class SchoolController {
 //            // PersistentBag
 //            log.info("{}", instructor.getAdvisingStudents().getClass());
 //        }
-//      List<Student> students = studentRepository.findAll();
-//      for (Student student: students) {
-//        if (student.getAdvisor() != null) {
-//          log.info("{}", student.getAdvisor().getClass());
-//          log.info("{}", student.getAdvisor().getId());
-//        }
-//      }
+      List<Student> students = studentRepository.findAll();
+    for (Student student: students) {
+      if (student.getAdvisor() != null) {
+        log.info("{}", student.getAdvisor().getClass());
+        log.info("{}", student.getAdvisor().getId());
+      }
+    }
 
       // SELECT t FROM T t;
       instructorRepository.findAll();

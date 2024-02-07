@@ -36,8 +36,10 @@ public class Lecture {
   //  : mappedBy로 나타내는 컬럼이 있는 테이블이
   //    운영 목적 상에서 해당 테이블이 관계에 대해서 많이 저장할 것을 의미한다.
   // Ex. attending은 Student의 컬럼이므로 Student 테이블이 관계에 대해서 많이 저장할 것이다.
-  @ManyToMany(mappedBy = "attending")
+  @ManyToMany(mappedBy = "attending", fetch = FetchType.LAZY)
   private final List<Student> students = new ArrayList<>();
+
+
 
     // 복수 관계 설정
 //  @ManyToMany(mappedBy = "completed")
