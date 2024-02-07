@@ -34,16 +34,34 @@ public class SchoolController {
   private final AttendingLectureRepo attendingLectureRepo;
   private final InstructorRepository instructorRepository;
 
-  @GetMapping("/entity-graph")
-  public String entityGraph() {
+  @GetMapping("/pageable")
+  public String pageable() {
+    Page<Instructor> instructorPage
+      = instructorRepository.findFetchPage(PageRequest.of(0, 5));
+
+    return "done";
+  }
+
+  @GetMapping("/multi-bag")
+  public String multiBag() {
     // Error, MultipleBagFetchException
     List<Instructor> instructors
       = instructorRepository.findWithStudentAndLecture();
 
-//    List<Instructor> instructors = instructorRepository.findByEntityGraph();
     for (Instructor instructor: instructors) {
       log.info("{}", instructor.getAdvisingStudents().size());
       log.info("{}", instructor.getLectures().size());
+    }
+
+
+    return "done";
+  }
+
+  @GetMapping("/entity-graph")
+  public String entityGraph() {
+    List<Instructor> instructors = instructorRepository.findByEntityGraph();
+    for (Instructor instructor: instructors) {
+      log.info("{}", instructor.getAdvisingStudents().size());
     }
 
     return "done";

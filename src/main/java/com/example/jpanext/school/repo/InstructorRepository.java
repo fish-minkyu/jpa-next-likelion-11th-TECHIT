@@ -3,15 +3,39 @@ package com.example.jpanext.school.repo;
 import com.example.jpanext.school.dto.ILCountDto;
 import com.example.jpanext.school.dto.ILCountProjection;
 import com.example.jpanext.school.entity.Instructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+
 import java.util.List;
 
 public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
 
+  // Error, Pagination 오류
+  // : 페이지네이션을 하기 위해 Join을 했을 때
+  // 페이지에 대한 정보를 바탕으로 Limit과 Offset을 정할 수 없어 오류가 발생한다.
+  @Query(
+    "SELECT DISTINCT i " +
+    "FROM Instructor i " +
+    "LEFT JOIN FETCH i.advisingStudents")
+  Page<Instructor> findFetchPage(Pageable pageable);
+
+  // MultipleBagFetchException
+  // : 2개를 동시에 가지고 와야 하기 때문에
+  // 데이터의 순서가 발생하여 2개를 연속으로 Fetch Join 할 수 없다.
+  @Query(
+    "SELECT DISTINCT i " +
+    "FROM Instructor i " +
+    "LEFT JOIN FETCH i.advisingStudents " +
+    "LEFT JOIN i.lectures"
+  )
+  List<Instructor> findFetchStudentAndLecture();
+
+  // MultipleBagFetchException
   @EntityGraph(
     attributePaths = {"advisingStudents", "lectures"},
     type = EntityGraph.EntityGraphType.FETCH
