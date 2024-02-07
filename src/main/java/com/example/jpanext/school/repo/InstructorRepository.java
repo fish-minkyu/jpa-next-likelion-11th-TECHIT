@@ -31,7 +31,7 @@ public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
     "SELECT DISTINCT i " +
     "FROM Instructor i " +
     "LEFT JOIN FETCH i.advisingStudents " +
-    "LEFT JOIN i.lectures"
+    "LEFT JOIN FETCH i.lectures"
   )
   List<Instructor> findFetchStudentAndLecture();
 

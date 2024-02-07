@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +37,18 @@ public class SchoolController {
 
   @GetMapping("/pageable")
   public String pageable() {
+    // 아래는 성능 문제 발생
+   /* Page<Instructor> instructorPage
+      = instructorRepository.findFetchPage(PageRequest.of(0, 5));*/
+
+    // LAZY를 하면 데이터가 필요할때까지는 추가 쿼리가 필요없다.
     Page<Instructor> instructorPage
-      = instructorRepository.findFetchPage(PageRequest.of(0, 5));
+      = instructorRepository.findAll(PageRequest.of(0, 7));
+
+    // 실제 데이터를 가져올 때 추가 쿼리가 발생한다. (Student 정보를 가져오는 쿼리 발생 - N+1 발생)
+    for (Instructor instructor: instructorPage) {
+      instructor.getAdvisingStudents().size();
+    }
 
     return "done";
   }
